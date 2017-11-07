@@ -1,0 +1,149 @@
+<!--
+You are free to copy and use this sample in accordance with the terms of the
+Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" href="./tax-compare.css">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>
+      Tax Compare
+    </title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['line', 'corechart']});
+    </script>
+    <script type="text/javascript">
+
+      function getData() {
+        var single = [
+          [0, 0],
+          [6300, 0],
+          [9526, 323],
+          [12200, 724],
+          [38701, 1519],
+          [45001, 2338],
+          [93701, 2338],
+          [195451, 5390],
+          [200001, 5754],
+          [424951, 1255],
+          [426701, 1308],
+          [500000, 4679],
+          [1000000, 4679],
+          [2000000, 4679],
+          [4000000, 4679],
+          [8000000, 4679],
+        ];
+        var married = [
+          [0, 0],
+          [12600, 0],
+          [19051, 645],
+          [24400, 1447],
+          [77401, 3037],
+          [90001, 4675],
+          [156151, 4675],
+          [237951, 7129],
+          [260001, 8893],
+          [424951, 5594],
+          [480051, 5594],
+          [1000000, 29512],
+          [2000000, 29512],
+          [4000000, 29512],
+          [8000000, 29512],
+        ];
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Gross Income $');
+        data.addColumn('number', 'Single Save');
+        data.addColumn('number', 'Married Save');
+        data.addColumn({type:'string', role:'annotationText'});
+        var xes = [];
+        for (var x = 10000; x < 200000; x += 10000) {
+          xes.push(x);
+        }
+        for (var x = 200000; x < 500000; x += 20000) {
+          xes.push(x);
+        }
+        xes.push(1000000);
+        xes.push(1500000);
+        xes.push(2000000);
+        xes.push(2500000);
+        for (var si in single) {
+          if (single[si] > 0) {
+            xes.push(single[si]);
+          }
+        }
+        for (var mi in married) {
+          if (married[mi] > 0) {
+            xes.push(married[mi]);
+          }
+        }
+        xes = xes.sort((a, b) => a - b);
+        var ps = 0, pm = 0;
+        var px = -1;
+        for (var ix in xes) {
+          x = xes[ix];
+          if (x > 1000000) break;
+          if (x == px) continue;
+          px = x;
+          console.log(px);
+          while (single[ps][0] <= x) ps++;
+          while (married[pm][0] <= x) pm++;
+          var row = [
+            x,
+            (x - single[ps - 1][0]) / (single[ps][0] - single[ps - 1][0]) * (single[ps][1] - single[ps - 1][1]) + single[ps - 1][1],
+            (x - married[pm - 1][0]) / (married[pm][0] - married[pm - 1][0]) * (married[pm][1] - married[pm - 1][1]) + married[pm - 1][1],
+          ];
+          row.push("Single save: " + (row[1] * 100 / x).toFixed() + "%, Married save " + (row[2] * 100 / x).toFixed() + "%");
+          console.log(row);
+          data.addRow(row);
+        }
+        return data;
+      }
+
+      function drawChart() {
+        var options = {
+          title: 'Saved Income Tax Dollars from the Tax Reform Bill',
+          crosshair: {
+            color: '#000',
+            trigger: 'select'
+          },
+          /*
+          chartArea: {
+          },
+          */
+          height: 1024,
+          // width:'100%',
+          lineWidth: 2,
+          pointSize: 3,
+          legend: { position: 'bottom' },
+          hAxis: {
+                   // title: 'Gross Income $',
+                   gridlines: { count: -1 },
+                   // format: 'long',
+                   format: 'currency'
+          },
+          vAxis: {
+                   title: 'Saved Tax $',
+                   gridlines: { count: 30 },
+                   format: 'currency'
+          },
+          explorer: {
+                      actions: ['dragToZoom', 'rightClickToReset'],
+                      axis: 'horizontal',
+                      keepInBounds: true,
+                      maxZoomIn: 0.001,
+          }
+        };
+  
+        var chart = new google.visualization.LineChart(document.getElementById('chart'));
+        chart.draw(getData(), options);
+      }
+      google.charts.setOnLoadCallback(drawChart);
+    </script>
+  </head>
+  <body style="font-family: Arial;border: 0 none;">
+  <div id="chart" width="%90" height="80%"> </div>
+  </body>
+</html>
