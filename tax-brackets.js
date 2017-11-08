@@ -95,3 +95,19 @@ new_york_married = [
   [321050, 0.0685],
   [2140900, 0.0882],
 ];
+
+function showBracketTable(title, bracket) {
+  var ret = '<p align="center">' + title + '</p>' +
+    '<table border=1>' +
+      '<tr>' +
+        '<th> Range </th>' +
+        '<th> Rate</th>' +
+      '</tr>\n';
+  for (var i = 0; i < bracket.length; ++i) {
+    ret += '<tr><td> ['+ bracket[i][0] + ', ' + ( i + 1 == bracket.length ? 'inf' : bracket[i + 1][0]) + ')</td><td>' +
+      (bracket[i][1] *100).toFixed(1) + '%</td></tr>\n';
+
+  }
+  ret += '</table>';
+  return ret; 
+}

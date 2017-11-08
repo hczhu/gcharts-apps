@@ -112,10 +112,36 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
         console.log(ret);
         return ret;
       }
-      function showBracketTable(bracket) {
-
-      }
       function showBrackets(whichState) {
+        var root = document.getElementById('brackets_table');
+        root.innerHTML = '';
+        var names = [
+          'Current Federal - Single',
+          'New Federal - Single',
+          'Current Federal - Married',
+          'New Federal - Married',
+          'State - Single',
+          'State - Married',
+        ];
+        var brackets = [
+          Fed[0],
+          NewFed[0],
+          Fed[1],
+          NewFed[1],
+          States[whichState][0],
+          States[whichState][1],
+        ];
+        for (var i = 0; i < names.length; i += 2) {
+          var row = document.createElement("tr");
+          row.setAttribute('align', 'top');
+          for (var j = i; j < i + 2; ++j) {
+            var cell = document.createElement("td");
+            cell.setAttribute('style', 'padding-right: 50px; padding-left: 50px;');
+            cell.innerHTML = showBracketTable(names[j], brackets[j]);
+            row.appendChild(cell);
+          }
+          root.appendChild(row);
+        }
       }
       function drawChart() {
         console.log('Drawing the chart...');
@@ -160,6 +186,7 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
           'currency',
           'Saved Tax $'
         );
+        showBrackets(whichState);
       }
       google.charts.setOnLoadCallback(drawChart);
 
@@ -186,8 +213,8 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
           </div>
         </td>
       </tr>
-      <tr id='brackets_row'>
-      </tr>
+    </table>
+    <table align="top" id='brackets_table' border=0 cellpadding="1">
     </table>
   </body>
 </html>
