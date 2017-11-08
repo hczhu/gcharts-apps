@@ -25,7 +25,7 @@ function drawLines(title, formats, names, rawData, div, vformat, hformat, vname)
       // left: 80,
       // right:50, // !!! works !!!
       // bottom:50,  // !!! works !!!
-      top: 50,
+      // top: 80,
       // height: "100%",
       // width: "100%"
     },
